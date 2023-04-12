@@ -1,6 +1,7 @@
 <script setup>
 // components
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue';
+import { FolderOutlined, MenuFoldOutlined, MenuUnfoldOutlined, PictureOutlined } from '@ant-design/icons-vue';
+import TreeNode from './TreeNode.vue';
 
 import { useRouter, useRoute } from 'vue-router'
 import { ref, reactive, watch, onMounted, computed, } from 'vue'
@@ -40,6 +41,8 @@ const menus = reactive([
 
 // lifes
 onMounted(async () => {
+  // 更新菜单，图片菜单的子菜单
+  getAndSetPicturesDirectories()
 })
 
 // methods
@@ -55,6 +58,76 @@ const setMenuActive = (key) => {
   menusStore.setMenuActiveKey(key)
 }
 
+// 获取并设置图片目录
+const getAndSetPicturesDirectories = () => {
+  const menuItem = menus.find((item) => item.path === '/pictures')
+
+  const childrens = [
+    {
+      name: '文件夹',
+      icon: FolderOutlined,
+      id: '1-1',
+    },
+    {
+      name: '文件夹',
+      icon: FolderOutlined,
+      id: '1-2',
+    },
+    {
+      name: '文件夹',
+      icon: FolderOutlined,
+      id: '1-3',
+    },
+    {
+      name: '文件夹',
+      icon: FolderOutlined,
+      id: '1-4',
+      children: [
+        {
+          name: '文件夹',
+          icon: FolderOutlined,
+          id: '1-4-1',
+        },
+        {
+          name: '文件夹',
+          icon: FolderOutlined,
+          id: '1-4-2',
+        },
+        {
+          name: '文件夹',
+          icon: FolderOutlined,
+          id: '1-4-3',
+          children: [
+            {
+              name: '文件夹',
+              icon: FolderOutlined,
+              id: '1-4-3-1',
+            },
+            {
+              name: '文件夹',
+              icon: FolderOutlined,
+              id: '1-4-3-2',
+            },
+            {
+              name: '文件夹',
+              icon: FolderOutlined,
+              id: '1-4-3-3',
+            },
+          ]
+        },
+        {
+          name: '文件夹',
+          icon: FolderOutlined,
+          id: '1-4-4',
+        },
+      ]
+    },
+  ]
+
+  menuItem.children = childrens
+}
+
+
 // watch
 // 识别当前进入的页面自动高亮菜单
 watch(() => $route.path, setMenuActive)
@@ -62,15 +135,7 @@ watch(() => $route.path, setMenuActive)
 
 <template>
   <div :class="['base-menu', menusStore.getMenuCollapsedStatus ? 'with-collapsed' : '']">
-    <div :class="['tree-node', menusStore.getMenuActiveKey === item.path ? 'active' : '']" v-for="(item, index) of menus" :key="item.id" @click="handleItemClick(item)">
-      <div class="tree-node-box">
-        <div class="icon">
-          <component :is="item.icon"></component>
-        </div>
-
-        <div class="name">{{ item.name }}</div>
-      </div>
-    </div>
+    <TreeNode :item="menus" :level="0" @click="handleItemClick"></TreeNode>
   </div>
 </template>
 
@@ -110,7 +175,13 @@ watch(() => $route.path, setMenuActive)
         margin-right: 0 !important;
       }
 
-      .tree-node-box {}
+      .tree-node-box {
+        padding-left: 10px !important;
+
+        .right-icons {
+          display: none;
+        }
+      }
     }
   }
 
@@ -175,6 +246,7 @@ watch(() => $route.path, setMenuActive)
       .name {
         white-space: nowrap;
         overflow: hidden;
+        flex: 1;
       }
     }
   }

@@ -2,7 +2,7 @@
  * @Author: 张超越 
  * @Date: 2022-05-27 17:40:15 
  * @Last Modified by: 张超越
- * @Last Modified time: 2022-10-21 16:00:26
+ * @Last Modified time: 2023-04-12 17:30:22
  */
 
 import { createRouter, createWebHistory } from "vue-router"
@@ -14,7 +14,7 @@ export const routes = [
     name: '图片',
     component: () => import('@/pages/Pictures/PageIndex.vue'),
     icon: PictureOutlined,
-    id: 1
+    id: 1,
   },
   {
     path: '/videos',
