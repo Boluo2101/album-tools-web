@@ -8,7 +8,6 @@ import { DownOutlined, UpOutlined } from '@ant-design/icons-vue'
 
 // Components
 import TreeNode from './TreeNode.vue'
-import { emit } from 'process';
 
 // Stores
 const menusStore = useStore()
@@ -23,6 +22,10 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  class: {
+    type: String,
+    default: '',
+  },
 })
 
 // Emits
@@ -32,42 +35,33 @@ const emits = defineEmits(['click', 'updateActiveKey'])
 const getTreeNodeStyle = computed(() => {
   if (props.level === 0) return {}
   return {
-    paddingLeft: `${props.level * 40}px`,
+    paddingLeft: `${props.level * 30}px`,
   }
 })
 
 // Methods
 const handleItemClick = (item) => {
+  if (item.onClick) return item.onClick()
+
   emits('click', item)
-  updateActiveKey(item)
+  updateActiveKey([item.id])
 
   if (!getHasChildren(item)) return
   item.opened = !item.opened
 }
 
-const updateActiveKey = (item) => {
-  props.item.forEach((i) => i.selfActiveKey = false)
-  item.selfActiveKey = true
-
-  emits('updateActiveKey', item)
-}
-
-const handleUpdateActiveKey = (childrenItem, item) => {
-  // childrenItem 为抛事件的子组件
-
-  props.item.forEach((i) => i.selfActiveKey = false)
-
-  item.selfActiveKey = true
-  item.children.forEach((i) => {
-    if (i.id === childrenItem.id) return
-    removeActiveKey(i)
+const updateActiveKey = (ids) => {
+  props.item.forEach((i) => {
+    removeActiveKey(i, ids)
+    if (ids.includes(i.id)) i.selfActiveKey = true
   })
+
+  emits('updateActiveKey', ids)
 }
 
-const removeActiveKey = (item) => {
-  item.selfActiveKey = false
-  if (!getHasChildren(item)) return
-  item.children.forEach((i) => removeActiveKey(i))
+const removeActiveKey = (item, ids) => {
+  item.selfActiveKey = ids.includes(item.id) ? true : false;
+  getHasChildren(item) && (item.children.forEach((i) => removeActiveKey(i, ids)))
 }
 
 const getHasChildren = (item) => {
@@ -83,21 +77,21 @@ const getIsActive = (item) => {
 
 <template>
   <div v-for="(item, index) of props.item" :key="item.id">
-    <div :class="['tree-node', getIsActive(item)]" @click="handleItemClick(item)">
+    <div :class="['tree-node', getIsActive(item), props.class]" @click="handleItemClick(item)">
       <div class="tree-node-box" :style="getTreeNodeStyle">
         <div class="icon">
           <component :is="item.icon"></component>
         </div>
 
-        <div class="name">{{ item.name }}</div>
+        <div class="name" :title="item.name">{{ item.name }}</div>
 
         <div v-if="getHasChildren(item)" class="right-icons">
-          <DownOutlined style="font-size: 8px" />
+          <component :is="item.opened ? UpOutlined : DownOutlined" style="font-size: 8px"></component>
         </div>
       </div>
     </div>
 
-    <TreeNode v-if="getHasChildren(item) && item.opened" :item="item.children" :level="props.level + 1" @updateActiveKey="childrenItem => handleUpdateActiveKey(childrenItem, item)"></TreeNode>
+    <TreeNode v-if="getHasChildren(item) && item.opened" :item="item.children" :level="props.level + 1" class="children" @updateActiveKey="ids => updateActiveKey([...ids, item.id])"></TreeNode>
   </div>
 </template>
 

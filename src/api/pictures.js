@@ -1,5 +1,5 @@
 import axios from "./index.js";
-export const getDirectories = (params) => axios.get(`/directories`, { params })
+export const getDirectories = (params) => axios.get(`/directories/only`, { params })
 
 export const getPictures = (params) => axios.get(`/pictures`, { params })
 

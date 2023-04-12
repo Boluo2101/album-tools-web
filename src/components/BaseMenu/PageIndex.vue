@@ -7,6 +7,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { ref, reactive, watch, onMounted, computed, } from 'vue'
 import { sortBy, cloneDeep, first } from 'lodash'
 import { useStore } from '@/store/menus.js'
+import { useStore as picturesStore } from '@/store/pictures.js'
 // configs
 import { routes } from '@/routes/index.js'
 
@@ -14,8 +15,9 @@ import { routes } from '@/routes/index.js'
 const $router = useRouter()
 const $route = useRoute()
 
-// apis
+// stores
 const menusStore = useStore()
+const pictureStore = picturesStore()
 
 // values
 
@@ -59,72 +61,10 @@ const setMenuActive = (key) => {
 }
 
 // 获取并设置图片目录
-const getAndSetPicturesDirectories = () => {
+const getAndSetPicturesDirectories = async () => {
+  await pictureStore.fetchDirectories()
   const menuItem = menus.find((item) => item.path === '/pictures')
-
-  const childrens = [
-    {
-      name: '文件夹',
-      icon: FolderOutlined,
-      id: '1-1',
-    },
-    {
-      name: '文件夹',
-      icon: FolderOutlined,
-      id: '1-2',
-    },
-    {
-      name: '文件夹',
-      icon: FolderOutlined,
-      id: '1-3',
-    },
-    {
-      name: '文件夹',
-      icon: FolderOutlined,
-      id: '1-4',
-      children: [
-        {
-          name: '文件夹',
-          icon: FolderOutlined,
-          id: '1-4-1',
-        },
-        {
-          name: '文件夹',
-          icon: FolderOutlined,
-          id: '1-4-2',
-        },
-        {
-          name: '文件夹',
-          icon: FolderOutlined,
-          id: '1-4-3',
-          children: [
-            {
-              name: '文件夹',
-              icon: FolderOutlined,
-              id: '1-4-3-1',
-            },
-            {
-              name: '文件夹',
-              icon: FolderOutlined,
-              id: '1-4-3-2',
-            },
-            {
-              name: '文件夹',
-              icon: FolderOutlined,
-              id: '1-4-3-3',
-            },
-          ]
-        },
-        {
-          name: '文件夹',
-          icon: FolderOutlined,
-          id: '1-4-4',
-        },
-      ]
-    },
-  ]
-
-  menuItem.children = childrens
+  menuItem.children = pictureStore.getDirectories
 }
 
 
@@ -158,6 +98,7 @@ watch(() => $route.path, setMenuActive)
   min-width: @width;
   max-width: @width;
   transition: all 0.3s;
+  overflow-y: auto;
 
   &.with-collapsed {
     @width: 60px;
@@ -182,6 +123,14 @@ watch(() => $route.path, setMenuActive)
           display: none;
         }
       }
+    }
+
+    .resize {
+      display: none;
+    }
+
+    .children {
+      display: none;
     }
   }
 
@@ -227,6 +176,11 @@ watch(() => $route.path, setMenuActive)
       border-radius: @BorderRadius;
       position: relative;
 
+      // 超出省略号隐藏
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
       .icon {
         margin-right: 10px;
         font-size: 20px;
@@ -247,6 +201,11 @@ watch(() => $route.path, setMenuActive)
         white-space: nowrap;
         overflow: hidden;
         flex: 1;
+      }
+
+      .right-icons {
+        display: flex;
+        align-items: center;
       }
     }
   }
