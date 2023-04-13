@@ -2,9 +2,10 @@
   "name": "album-tools-web",
   "private": true,
   "version": "0.0.0",
+  "main": "dist-electron/index.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "rimraf dist && vite build && electron-builder",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -25,8 +26,56 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.1.0",
+    "electron": "^24.1.1",
+    "electron-devtools-installer": "^3.2.0",
     "less-loader": "^11.1.0",
     "npm-check-updates": "^16.8.0",
-    "vite": "^4.2.1"
+    "rimraf": "^5.0.0",
+    "vite": "^4.2.1",
+    "vite-plugin-electron": "^0.11.1"
+  },
+  "build": {
+    "appId": "com.albumtools.desktop",
+    "productName": "AlbumTools",
+    "asar": true,
+    "copyright": "Copyright © 2023 AlbumTools",
+    "directories": {
+      "output": "release/${version}"
+    },
+    "files": [
+      "dist"
+    ],
+    "mac": {
+      "artifactName": "${productName}_${version}.${ext}",
+      "target": [
+        "dmg"
+      ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "${productName}_${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": false
+    },
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "http://127.0.0.1:8080"
+      }
+    ],
+    "releaseInfo": {
+      "releaseNotes": "版本更新的具体内容"
+    }
   }
 }

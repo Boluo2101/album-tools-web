@@ -2,10 +2,20 @@ import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
+import * as path from "path";
+import electron from "vite-plugin-electron";
+// import electronRender from 'vite-plugin-electron-renderer'
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
+    electron(
+      {
+        entry: 'electron/index.ts',
+      }
+    ),
+    // electronRender(),
   ],
   resolve: {
     alias: {
@@ -19,18 +29,6 @@ export default defineConfig({
       less: {
         charset: false,
         additionalData: '@import "./src/assets/style/global.module.less";',
-      },
-    },
-    loaderOptions: {
-      less: {
-        lessOptions: {
-          modifyVars: {
-            'primary-color': '#1DA57A',
-            'link-color': '#1DA57A',
-            'border-radius-base': '2px',
-          },
-          javascriptEnabled: true,
-        },
       },
     },
   },

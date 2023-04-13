@@ -26,7 +26,7 @@ const handleClose = value => {
 </script>
 
 <template>
-  <div class="base-header">
+  <div class="base-header" draggable="false">
     <div class="logo-box">
       <span class="text color">ALBUM</span>
       <span class="text">TOOLS</span>
@@ -58,6 +58,7 @@ const handleClose = value => {
   top: 0;
   left: 0;
   right: 0;
+  -webkit-app-region: drag;
 
   .icons {
     padding: 0 10px;

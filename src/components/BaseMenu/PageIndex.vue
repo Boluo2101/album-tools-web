@@ -158,6 +158,7 @@ watch(() => $route.path, setMenuActive)
   min-width: @width;
   max-width: @width;
   transition: all 0.3s;
+  -webkit-app-region: drag;
 
   &.with-collapsed {
     @width: 60px;
@@ -195,6 +196,7 @@ watch(() => $route.path, setMenuActive)
     cursor: pointer;
     user-select: none;
     box-sizing: border-box;
+    -webkit-app-region: no-drag;
 
     &:hover {
       .tree-node-box {
