@@ -63,6 +63,7 @@ const handleClose = value => {
   .icons {
     padding: 0 10px;
     cursor: pointer;
+    -webkit-app-region: no-drag;
 
     .icon {
       @height: 40px;
@@ -106,6 +107,7 @@ const handleClose = value => {
       color: @PrimaryColor;
       animation-duration: 5s;
       font-weight: 300;
+
       &:hover {
         animation-name: hover;
         animation-iteration-count: infinite;

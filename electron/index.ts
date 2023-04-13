@@ -1,14 +1,12 @@
 // app 控制应用程序的事件生命周期（相当于应用程序）
 // BrowserWindow 创建并控制浏览器窗口（相当于打开桌面弹框）
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, screen, Notification} from 'electron'
 import path from 'path'
 
 // 定义全局变量，获取窗口实例
-let win
+let win: BrowserWindow
 
-/**
- * 创建一个窗口
- */
+// 创建一个窗口
 const createWindow = () => {
   win = new BrowserWindow({
     webPreferences: {
@@ -27,8 +25,8 @@ const createWindow = () => {
     frame: false,
 
     // 窗口宽高，0.618比例
-    width: 1000,
-    height: 618,
+    width: getScreenWidth(0.7),
+    height: getScreenHeight(0.7),
 
     // 窗口最小宽高
     minWidth: 800,
@@ -70,7 +68,7 @@ const createWindow = () => {
     // 是否有阴影
     hasShadow: true,
 
-
+    // 是否显示右下角
   })
 
   // 生产环境、开发环境，访问的路径不同
@@ -78,26 +76,61 @@ const createWindow = () => {
   // 打包之后，我们访问的是 dist 静态文件
   // 所以这里要加个判断
   if (app.isPackaged) {
-    win.loadFile(path.join(__dirname, "../index.html"));
+    win.loadFile(path.join(__dirname, "../dist/index.html"));
   } else {
     // 集成网页和 Node.js 后，需要加载
     // 这里接收的网址是指：Vite 启动后，会在本地运行一个服务，把这个服务网址丢进去就行
     // 使用 Vite 自带的环境变量 VITE_DEV_SERVER_HOST
     // 如果是 undefined，就换成 VITE_DEV_SERVER_HOSTNAME
 
-    const url = process.env['VITE_DEV_SERVER_URL']
+    const url: string = process.env['VITE_DEV_SERVER_URL'] || ''
     console.log(url)
     win.loadURL(url)
   }
 }
 
 // 初始化app（在 Electron 完成初始化时触发）
-app.whenReady().then(createWindow)
+app.whenReady()
+  .then(createWindow)
+  .then(() => {})
 
 // isPackage 无效，可以换下面的
 // 注意：这个环境变量，需要安装 cross-env，在 package.json 中指定下，在 3.5 中写了
 // if (process.env.NODE_ENV != 'development') {
-     // win.loadFile(path.join(__dirname, "../index.html"));
+// win.loadFile(path.join(__dirname, "../index.html"));
 // } else {
-     // win.loadURL(`http://${process.env['VITE_DEV_SERVER_HOSTNAME']}:${process.env['VITE_DEV_SE//RVER_PORT']}`)
+// win.loadURL(`http://${process.env['VITE_DEV_SERVER_HOSTNAME']}:${process.env['VITE_DEV_SE//RVER_PORT']}`)
 // }
+
+// 当所有窗口都被关闭时退出
+app.on('window-all-closed', () => {
+  // 在 macOS 上，除非用户用 Cmd + Q 确定地退出，否则绝大部分应用及其菜单栏会保持激活
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+})
+
+// 当应用程序激活时，没有打开的窗口时触发
+app.on('activate', () => {
+  // 在macOS上，当单击dock图标并且没有其他窗口打开时，通常在应用程序中重新创建一个窗口
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow()
+  }
+})
+
+// 退出时，关闭窗口
+app.on('before-quit', () => {
+  win.close()
+})
+
+// 获取系统宽度
+const getScreenWidth = (num = 1) => {
+  const returnNumber = parseInt(String(screen.getPrimaryDisplay().workAreaSize.width * num))
+  return returnNumber
+}
+
+// 获取系统高度
+const getScreenHeight = (num = 1) => {
+  const returnNumber = parseInt(String(screen.getPrimaryDisplay().workAreaSize.height * num))
+  return returnNumber
+}

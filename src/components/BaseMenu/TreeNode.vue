@@ -1,6 +1,8 @@
 <script setup>
 // Tools
 import { defineProps, defineEmits, computed, ref } from 'vue'
+// Store
+import { useStore as picturesStore } from '@/store/pictures.js'
 import { useStore } from '@/store/menus.js'
 
 // Icons
@@ -11,6 +13,7 @@ import TreeNode from './TreeNode.vue'
 
 // Stores
 const menusStore = useStore()
+const pictureStore = picturesStore()
 
 // Props
 const props = defineProps({
@@ -42,21 +45,27 @@ const getTreeNodeStyle = computed(() => {
 // Methods
 const handleItemClick = (item) => {
   if (item.onClick) return item.onClick()
-
+  console.log('handleItemClick', item)
+  
   emits('click', item)
-  updateActiveKey([item.id])
+  updateActiveKey([item.id], item)
 
   if (!getHasChildren(item)) return
   item.opened = !item.opened
 }
 
-const updateActiveKey = (ids) => {
+const updateActiveKey = async (ids, item) => {
   props.item.forEach((i) => {
     removeActiveKey(i, ids)
     if (ids.includes(i.id)) i.selfActiveKey = true
   })
 
   emits('updateActiveKey', ids)
+
+  if (!item || !item.raw) return
+  const path = item.raw.path
+  console.log('path', path)
+  await pictureStore.fetchPictures(path)
 }
 
 const removeActiveKey = (item, ids) => {

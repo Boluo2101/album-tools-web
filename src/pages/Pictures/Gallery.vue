@@ -27,7 +27,7 @@ const getIsCheckedAll = computed(() => {
 })
 
 const getHoverImageInfo = computed(() => {
-  return picturesStore.pictures.get(hoverImageID.value) || {}
+  return picturesStore.getPictures.find(i => i.uuid === hoverImageID.value) || {}
 })
 
 const getPicturesSorted = computed(() => {

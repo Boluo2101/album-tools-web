@@ -157,7 +157,6 @@ watch(() => props.details, async (newVal, oldVal) => {
         font-size: 14px;
         margin-top: 20px;
       }
-
       .img {
         width: 100%;
         border-radius: @BorderRadius;

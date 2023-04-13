@@ -97,7 +97,7 @@ watch(() => $route.path, setMenuActive)
   width: @width;
   min-width: @width;
   max-width: @width;
-  transition: all 0.3s;
+  transition: width 0.3s;
   overflow-y: auto;
   -webkit-app-region: drag;
 

@@ -11,14 +11,17 @@ import {
   getPicturesDetails
 } from '../api/pictures'
 import dayjs from 'dayjs'
-import { FolderOutlined } from '@ant-design/icons-vue';
+import {
+  FolderOutlined
+} from '@ant-design/icons-vue';
 
 export const useStore = defineStore('pictures', {
   // 推荐使用 完整类型推断的箭头函数
   state: () => {
     return {
+      caches: new Map(),
       directories: [],
-      pictures: new Map(),
+      pictures: [],
       picturesDetails: new Map(),
       picturesPathsDeleted: [],
       checkedPictures: {
@@ -41,6 +44,7 @@ export const useStore = defineStore('pictures', {
           icon: FolderOutlined,
           id: i.uuid,
           name: i.name,
+          raw: i,
           children
         }
       }
@@ -48,8 +52,7 @@ export const useStore = defineStore('pictures', {
       return this.directories.map(i => handle(i)).sort((a, b) => b.children.length - a.children.length)
     },
     getPictures() {
-      const pictures = [...this.pictures.values()]
-      return pictures
+      return this.pictures
     },
     getPicturesPathsDeleted() {
       return this.picturesPathsDeleted
@@ -67,57 +70,61 @@ export const useStore = defineStore('pictures', {
         this.checkedPictures[keyName].add(value)
       }
     },
-    setPictures(value) {
-      value.forEach(i => {
+    setPictures(value, cacheName = '/') {
+      this.caches.set(cacheName, this.pictures)
+      this.pictures = value.map(i => {
         const {
           birthtimeMs: createDate = '',
           mtimeMs: updateDate = '',
           size
         } = i.stat
 
-        this.pictures.set(i.path, {
+        return {
           ...i,
           size,
           createDate,
           updateDate,
           cacheUrl: CONFIGS.baseURL + '/pictures/cache/' + encodeURI(i.path),
           url: CONFIGS.baseURL + '/pictures/raw/' + encodeURI(i.path),
-        })
+        }
       })
     },
     setPicturesDetails(array) {
       array.forEach(i => {
         this.picturesDetails.set(i.path, i)
+        // 以下需要优化
+        // const dbDetails = i
+        // let picture = this.pictures.find(i => i.path === dbDetails.path) || {}
+        // const {
+        //   createDate = 0, updateDate = 0
+        // } = picture
+        // let {
+        //   dateTimeOriginal = 0
+        // } = dbDetails
+        // dateTimeOriginal = dateTimeOriginal ? dayjs(dateTimeOriginal).valueOf() : Math.min(createDate, updateDate)
 
-        const picture = this.pictures.get(i.path) || {}
-        const {
-          createDate = 0, updateDate = 0
-        } = picture
-        const dbDetails = i
-        let {
-          dateTimeOriginal = 0
-        } = dbDetails
-        dateTimeOriginal = dateTimeOriginal ? dayjs(dateTimeOriginal).valueOf() : Math.min(createDate, updateDate)
-
-        this.pictures.set(i.path, {
-          ...i,
-          ...picture,
-          dateTimeOriginal,
-          dbDetails
-        })
+        // picture = {
+        //   ...i,
+        //   ...picture,
+        //   dateTimeOriginal,
+        //   dbDetails
+        // }
       })
     },
-    async fetchPictures() {
+    async fetchPictures(path = '') {
+      path = encodeURIComponent(path)
       const {
         msg,
         code,
         data: pictures = []
-      } = await getPictures()
+      } = await getPictures({
+        path
+      })
       if (code !== 200) {
         console.error(msg)
         return
       }
-      this.setPictures(pictures)
+      this.setPictures(pictures, path)
     },
     async fetchPicturesDetails() {
       const {
