@@ -11,6 +11,7 @@ import {
   getPicturesDetails
 } from '../api/pictures'
 import dayjs from 'dayjs'
+import { FolderOutlined } from '@ant-design/icons-vue';
 
 export const useStore = defineStore('pictures', {
   // 推荐使用 完整类型推断的箭头函数
@@ -34,7 +35,17 @@ export const useStore = defineStore('pictures', {
       return this.checkedPictures.similar
     },
     getDirectories() {
-      return this.directories
+      const handle = (i) => {
+        const children = i.children.map(i => handle(i))
+        return {
+          icon: FolderOutlined,
+          id: i.uuid,
+          name: i.name,
+          children
+        }
+      }
+
+      return this.directories.map(i => handle(i)).sort((a, b) => b.children.length - a.children.length)
     },
     getPictures() {
       const pictures = [...this.pictures.values()]
