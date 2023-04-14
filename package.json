@@ -2,6 +2,7 @@
   "name": "juhe-tools-web",
   "private": true,
   "version": "0.0.4",
+  "description": "🌈🎈✨🎉🎊 An image manager application based on electron, vue3 and vite",
   "main": "dist-electron/index.js",
   "scripts": {
     "dev": "vite",
