@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "beta" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "beta" ]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -39,10 +39,12 @@ jobs:
         ls ./release
     
     - name: Upload file
-      uses: actions/upload-artifact@v2
       with:
-        name: packs
+        name: uploads
         path: |
-          ./release/*/*dmg # mac 安装包
-          ./release/*/*exe # window 安装包
-          ./release/*/*snap # linux 安装包
+          curl --silent \
+               --request POST \
+               --url "$upload_url?name=$filename" \
+               --header "authorization: Bearer $github_token" \
+               --header "content-type: $content_type" \
+               --data-binary @"$filepath"
