@@ -30,9 +30,9 @@ jobs:
           npm run build
           pwd
           ls ./release
-      - name: Upload Release # 上传构建好的文件
-        uses: actions/upload-artifact@v2
-        with:
-          name: release
-          path: ./release
-          if-no-files-found: error
+      # - name: Upload Release # 上传构建好的文件
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: release
+      #     path: ./release
+      #     if-no-files-found: error
