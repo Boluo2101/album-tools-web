@@ -29,14 +29,8 @@ jobs:
       run: |
         npm install
         npm run build
-
-    - name: Echo pwd and ls
-      run: |
         pwd
         ls -al
-
-    - name: Echo release
-      run: |
         ls ./release
     
     - name: Upload file
