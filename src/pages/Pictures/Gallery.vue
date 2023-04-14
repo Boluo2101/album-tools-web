@@ -172,11 +172,13 @@ watch(
 
 	.images-box {
 		flex: 1;
-		@height: calc(100vh - 62px - 60px - 20px);
+		@height: calc(100vh - 62px - 60px - 20px - @PagePadding * 1);
 		height: @height;
 		overflow-y: auto;
 		width: 100%;
-		margin-right: 10px;
+		margin-right: calc(@PagePadding * 2);
+    margin-top: @PagePadding * 2;
+    margin-left: @PagePadding * 2;
 	}
 
 	.images {
@@ -188,8 +190,9 @@ watch(
 
 	.view-box {
 		position: sticky;
-		right: 0;
-		top: 62px;
+		right: @PagePadding * 2;
+    margin-top: @PagePadding * 2;
+    margin-left: 10px;
 		min-width: 340px;
 		max-width: 340px;
 	}

@@ -34,6 +34,9 @@ const props = defineProps({
 // Emits
 const emits = defineEmits(["click", "updateActiveKey"])
 
+// Variables
+const parentItemColorful = ref(false)
+
 // Computeds
 const getTreeNodeStyle = computed(() => {
 	if (props.level === 0) return {}
@@ -104,7 +107,7 @@ const getIsActive = (item) => {
 			:item="item.children"
 			:level="props.level + 1"
 			class="children"
-			@updateActiveKey="(ids) => updateActiveKey([...ids, item.id])"
+			@updateActiveKey="(ids) => updateActiveKey([...ids, parentItemColorful ? item.id : 0 ].filter(i => i))"
 		></TreeNode>
 	</div>
 </template>

@@ -7,7 +7,7 @@ const menusStore = useStore()
 </script>
 
 <template>
-	<router-view :class="['page-container', 'padding', menusStore.getMenuCollapsedStatus ? 'with-collapsed' : '']"></router-view>
+	<router-view :class="['page-container', menusStore.getMenuCollapsedStatus ? 'with-collapsed' : '']"></router-view>
 </template>
 
 <style lang="less" scoped>

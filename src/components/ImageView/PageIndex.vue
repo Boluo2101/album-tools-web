@@ -142,7 +142,7 @@ watch(
 		height: 100%;
 		border-radius: 2px;
 		background-color: @DarkBoxBackgroundColor;
-		@height: calc(100vh - 62px - 60px - 20px);
+		@height: calc(100vh - 62px - 60px - @PagePadding * 2 - 10px);
 		min-height: @height;
 		max-height: @height;
 		display: flex;

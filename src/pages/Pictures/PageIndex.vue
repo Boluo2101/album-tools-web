@@ -27,6 +27,7 @@ import { useStore } from "@/store/pictures.js"
 import Gallery from "./Gallery.vue"
 import SimilarImages from "./SimilarImages.vue"
 import ColorSelector from "@/components/ColorSelector/PageIndex.vue"
+import Tabs from "@/components/Tabs/PageIndex.vue"
 
 // Values
 const picturesStore = useStore()
@@ -157,9 +158,9 @@ const handleImageView = () => {
 	showImageView.value = !showImageView.value
 }
 
-const handleTabChange = (key) => {
+const handleTabChange = ({ key }) => {
 	console.info("handleTabChange", key)
-	checkedImages.value = []
+	activeKey.value = key
 	checkedAll.value = false
 }
 </script>
@@ -167,9 +168,8 @@ const handleTabChange = (key) => {
 <template>
 	<div class="PicturesPage">
 		<!-- Tabs -->
-		<a-tabs v-model:activeKey="activeKey" class="tab-box">
-			<a-tab-pane v-for="(tab, index) of tabs" :key="tab.key" :tab="tab.tab" @change="handleTabChange"></a-tab-pane>
-			<template #rightExtra>
+		<Tabs :tabs="tabs" @change="handleTabChange">
+			<template #right>
 				<!-- 删除 -->
 				<a-button v-show="getShowDelete" type="text" @click="handleDelete">
 					<DeleteOutlined />
@@ -222,7 +222,7 @@ const handleTabChange = (key) => {
 					</a-button>
 				</a-dropdown>
 			</template>
-		</a-tabs>
+		</Tabs>
 
 		<!-- gallery -->
 		<Gallery
@@ -236,7 +236,7 @@ const handleTabChange = (key) => {
 			@checkedImages="handleCheckedImages"
 		/>
 
-		<!-- remove similar pictures -->
+		<!-- similar pictures -->
 		<SimilarImages
 			v-show="activeKey === 2"
 			:sortBy="sortBy"

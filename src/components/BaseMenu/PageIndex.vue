@@ -99,6 +99,7 @@ watch(() => $route.path, setMenuActive)
 	transition: width 0.3s;
 	overflow-y: auto;
 	-webkit-app-region: drag;
+	border-right: 1px solid @DarkBorderSecondColor;
 
 	&.with-collapsed {
 		@width: 60px;

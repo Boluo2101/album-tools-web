@@ -4,7 +4,6 @@ import { ref, reactive, onMounted, onUnmounted, computed, defineProps, watch, ne
 import { v4 as uuidv4 } from "uuid"
 import { sortBy, chunk } from "lodash"
 import { useStore } from "@/store/pictures.js"
-import { compareHashes as compareHashesFun } from "@/utils/tools.js"
 import { DarkBoxBackgroundColor, DarkBorderColor } from "@/assets/style/global.module.less"
 
 // Worker
@@ -313,7 +312,7 @@ watch(
 	display: flex;
 
 	.step-box {
-		margin-bottom: 20px;
+    margin-bottom: 10px;
 	}
 
 	.images-box {
@@ -339,10 +338,11 @@ watch(
 
 	.view-box {
 		position: sticky;
-		right: 0;
-		top: 62px;
+		right: @PagePadding * 2;
+    margin-top: @PagePadding * 2;
 		min-width: 340px;
 		max-width: 340px;
+    margin-left: 10px;
 	}
 
 	.images {
@@ -355,13 +355,15 @@ watch(
 
 	.cards {
 		flex: 1;
-		margin-right: 10px;
-		@height: calc(100vh - 123px);
+		@height: calc(100vh - 123px - @PagePadding * 1);
 		height: @height;
 		max-height: @height;
 		overflow: hidden;
 		display: flex;
 		flex-direction: column;
+    margin-right: calc(@PagePadding * 2);
+    margin-top: @PagePadding * 2;
+    margin-left: @PagePadding * 2;
 
 		.card {
 			margin-bottom: 15px;
