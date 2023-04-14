@@ -7,6 +7,9 @@
     "dev": "vite",
     "build:web": "vite build",
     "build": "rimraf dist && npx yarn autoclean -I && npx yarn autoclean -F && vite build && npx electron-builder",
+    "build:win": "rimraf dist && npx yarn autoclean -I && npx yarn autoclean -F && vite build && npx electron-builder --win",
+    "build:mac": "rimraf dist && npx yarn autoclean -I && npx yarn autoclean -F && vite build && npx electron-builder --mac",
+    "build:linux": "rimraf dist && npx yarn autoclean -I && npx yarn autoclean -F && vite build && npx electron-builder --linux",
     "preview": "vite preview",
     "prettier": "npx prettier --config .prettierrc.js --write ./src/**/*.vue && npx prettier --config .prettierrc.js --write ./src/**/*.js"
   },
