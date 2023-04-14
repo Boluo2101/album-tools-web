@@ -24,7 +24,7 @@ const createWindow = () => {
     // 隐藏标题栏
     frame: false,
 
-    // 窗口宽高，0.618比例
+    // 窗口宽高
     width: getScreenWidth(0.7),
     height: getScreenHeight(0.7),
 

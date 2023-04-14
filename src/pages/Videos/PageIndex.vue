@@ -1,13 +1,10 @@
-<script setup>
-
-</script>
+<script setup></script>
 
 <template>
-  <div class="VideosPage"></div>
+	<div class="VideosPage"></div>
 </template>
 
 <style lang="less" scoped>
 .VideosPage {
-  
 }
 </style>
