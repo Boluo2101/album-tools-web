@@ -12,12 +12,11 @@ on:
 jobs:
   build:
 
-    runs-on: electronuserland/builder:wine
+    runs-on: ${{matrix.os}}
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        os: [windows-latest, macOS-latest, ubuntu-latest] 
 
     steps:
     - uses: actions/checkout@v3
@@ -26,9 +25,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm install
-    - run: ls
-    - run: npm run build:linux
-    - run: ls
-    - run: npm run build:win
-    - run: ls
+    - name: Install and Pack # 安装依赖并且进行构建
+      run: |
+        npm install
+        npm run build
+        ls
