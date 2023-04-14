@@ -25,26 +25,10 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - name: Install and Pack # 安装依赖并且进行构建
+    - name: Install and build # 安装依赖并且进行构建
       run: |
         npm install
         npm run build
-
-    - name: Echo pwd and ls
-      run: |
         pwd
         ls -al
-    - name: Echo release
-      run: |
         ls ./release
-    
-    - name: Upload file
-      with:
-        name: uploads
-        path: |
-          curl --silent \
-               --request POST \
-               --url "$upload_url?name=$filename" \
-               --header "authorization: Bearer $github_token" \
-               --header "content-type: $content_type" \
-               --data-binary @"$filepath"
