@@ -29,12 +29,13 @@ jobs:
       run: |
         npm install
         npm run build
+        pwd
         ls
     - name: Upload file
       uses: actions/upload-artifact@v2
       with:
         name: packs
         path: |
-          release/*dmg # mac 安装包
-          release/*exe # window 安装包
-          release/*snap # linux 安装包
+          ./release/*/*dmg # mac 安装包
+          ./release/*/*exe # window 安装包
+          ./release/*/*snap # linux 安装包
