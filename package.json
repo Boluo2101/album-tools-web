@@ -1,7 +1,7 @@
 {
   "name": "juhe-tools-web",
   "private": true,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "dist-electron/index.js",
   "scripts": {
     "dev": "vite",
