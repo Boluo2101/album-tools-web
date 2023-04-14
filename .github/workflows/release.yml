@@ -5,29 +5,34 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
-
     runs-on: ${{matrix.os}}
 
     strategy:
       matrix:
-        os: [windows-latest, macOS-latest, ubuntu-latest] 
+        os: [windows-latest, macOS-latest, ubuntu-latest]
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - name: Install and build # 安装依赖并且进行构建
-      run: |
-        npm install
-        npm run build
-        pwd
-        ls ./release
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - name: Install and Build # 安装依赖并且进行构建
+        run: |
+          npm install
+          npm run build
+          pwd
+          ls ./release
+      - name: Upload Release # 上传构建好的文件
+        uses: actions/upload-artifact@v2
+        with:
+          name: release
+          path: ./release
+          if-no-files-found: error
