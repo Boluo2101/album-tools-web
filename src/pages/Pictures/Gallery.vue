@@ -122,7 +122,7 @@ const handleCheckAll = ({ value, from = "inject" }) => {
 }
 
 const handleImageMouseEnter = (e, image) => {
-	hoverImageID.value = image.path
+	hoverImageID.value = image.uuid
 }
 
 // Watchs

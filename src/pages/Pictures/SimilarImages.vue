@@ -141,7 +141,7 @@ onUnmounted(() => {})
 
 // Methods
 const handleImageMouseEnter = (e, image) => {
-	hoverImageID.value = image.path
+	hoverImageID.value = image.uuid
 }
 
 const createGroupsPHash = async (callback) => {
