@@ -35,5 +35,6 @@ jobs:
       with:
         name: packs
         path: |
-          packs/*dmg # mac 安装包
-          packs/*exe # window 安装包
+          release/*dmg # mac 安装包
+          release/*exe # window 安装包
+          release/*snap # linux 安装包
