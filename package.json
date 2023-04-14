@@ -5,6 +5,7 @@
   "main": "dist-electron/index.js",
   "scripts": {
     "dev": "vite",
+    "build:web": "vite build",
     "build": "rimraf dist && npx yarn autoclean -I && npx yarn autoclean -F && vite build && npx electron-builder",
     "preview": "vite preview",
     "prettier": "npx prettier --config .prettierrc.js --write ./src/**/*.vue && npx prettier --config .prettierrc.js --write ./src/**/*.js"
