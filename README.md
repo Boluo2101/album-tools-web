@@ -1,6 +1,7 @@
 # 简介 Description
 
-🌈🎈✨🎉🎊 An image manager application based on electron, vue3 and vite.  
+🌈🎈✨🎉🎊   
+An image manager application based on electron, vue3 and vite.  
 一个基于 electron, vue3 和 vite 开发的图片管理应用。
 
 # 镜像源设置 Mirror Source Settings
