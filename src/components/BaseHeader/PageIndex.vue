@@ -10,6 +10,7 @@ import { SettingOutlined } from "@ant-design/icons-vue"
 
 // Components
 import PageSetting from "../PageSetting/PageIndex.vue"
+import TitleButtons from "../TitleButtons/PageIndex.vue"
 
 // Tools
 import { ref } from "vue"
@@ -36,11 +37,13 @@ const handleClose = (value) => {
 			<span class="text color">{{ NAME_FIRST }}</span>
 			<span class="text">{{ NAME_LAST }}</span>
 		</div>
-		<div class="icons">
+		<!-- <div class="icons">
 			<div class="icon" @click="handleSettingPage">
 				<setting-outlined />
 			</div>
-		</div>
+		</div> -->
+
+    <TitleButtons></TitleButtons>
 	</div>
 
 	<PageSetting :status="visibleSetting" @close="handleClose"></PageSetting>
