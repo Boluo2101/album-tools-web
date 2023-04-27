@@ -10,6 +10,7 @@ import { SettingOutlined } from "@ant-design/icons-vue"
 
 // Components
 import PageSetting from "../PageSetting/PageIndex.vue"
+import PageLogin from "../PageLogin/PageIndex.vue"
 
 // Tools
 import { ref } from "vue"
@@ -43,7 +44,7 @@ const handleClose = (value) => {
 		</div>
 	</div>
 
-	<PageSetting :status="visibleSetting" @close="handleClose"></PageSetting>
+	<PageLogin :status="visibleSetting" @close="handleClose"></PageLogin>
 </template>
 
 <style lang="less" scoped>

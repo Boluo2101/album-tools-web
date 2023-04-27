@@ -26,8 +26,8 @@ const picturesStore = useStore()
 
 // Variables
 const worker = new Worker()
-let saveType = ref("quality")
-let deleteType = ref("recycleBin")
+let saveType = ref("")
+let deleteType = ref("")
 let steps = ref([
 	{
 		runningText: "分析中",
@@ -50,8 +50,8 @@ let stepStatus = ref({
 	current: 0,
 	percent: 0,
 })
-
 let hoverImageID = ref("")
+const excludesExt = ["heic", "raw", "cr2", "rw2", "dng", "raf", "arw", "nef", "gif"]
 
 // 组
 let groups = ref([])
@@ -181,6 +181,7 @@ const handleImageCheckChange = ({ value, image, index }) => {
 }
 
 const handleComparePictures = () => {
+  console.info("handleComparePictures")
 	groups.value = []
 
 	worker.postMessage({
@@ -188,7 +189,9 @@ const handleComparePictures = () => {
 		msgData: {
 			pictures: picturesStore.getPictures.map((i) => JSON.parse(JSON.stringify(i))),
 		},
-	})
+  })
+
+  console.info("worker", worker)
 }
 
 const getStepTitle = (step, index) => {
@@ -230,6 +233,35 @@ const handleOKBtn = () => {
 	}
 }
 
+const handleSaveTypeChange = (value) => {
+  console.info("handleSaveTypeChange", value)
+  const { target: { value: val } } = value
+  switch (val) {
+    case "sizeSmall":
+      autoCheckSizeSmall()
+      break
+    case "recently":
+      break
+    case "formerly":
+      break
+    default:
+      break
+  }
+}
+
+const autoCheckSizeSmall = () => {
+  getGroups.value.forEach((group) => {
+    const images = group.images.filter(i => !excludesExt.includes(i.extname.replace('.', ''))) || []
+    if (images.length === 0) return
+
+    // 排除的格式
+    const minSizeImage = images.reduce((prev, next) => {
+      return prev.size > next.size ? next : prev
+    })
+    handleImageCheckChange({ value: true, image: minSizeImage })
+  })
+}
+
 // Watchs
 watch(
 	() => picturesStore.getPictures,
@@ -258,6 +290,15 @@ watch(
 			<VirtualList class="images-box" :data-key="'gUuid'" :data-sources="getGroups" :keeps="10" ref="virtualList">
 				<template v-slot="{ source }">
 					<a-card :title="source.title" size="small" class="card" :headStyle="getCardHeadStyle" style="border-top: none">
+            <template #extra>
+              <a-radio-group class="right-tools" size="small">
+                <a-radio-button value="sizeSmall" class="text">小文件</a-radio-button>
+                <a-radio-button value="sizeLarge" class="text">大文件</a-radio-button>
+                <a-radio-button value="formerly" class="text">时间远</a-radio-button>
+                <a-radio-button value="recently" class="text">时间近</a-radio-button>
+              </a-radio-group>
+            </template>
+
 						<div class="images">
 							<ImageCard
 								v-for="(image, index) of source.images"
@@ -278,17 +319,16 @@ watch(
 
 			<div class="tools-box">
 				<div v-if="getShowDeleteTools" class="radios">
-					你将保留
-					<a-radio-group v-model:value="saveType" size="small">
-						<a-radio-button value="quality">质量最好</a-radio-button>
+					你将自动勾选
+					<a-radio-group v-model:value="saveType" size="small" @change="handleSaveTypeChange">
 						<a-radio-button value="sizeSmall">文件最小</a-radio-button>
-						<a-radio-button value="recently">时间最近</a-radio-button>
-						<a-radio-button value="formerly">时间最早</a-radio-button>
+						<a-radio-button value="recently">时间更近</a-radio-button>
+						<a-radio-button value="formerly">时间更早</a-radio-button>
 					</a-radio-group>
-					的图片，其余的重复 <b>300</b> 张图片将被
+					的图片，随后将其
 					<a-radio-group v-model:value="deleteType" size="small">
 						<a-radio-button value="recycleBin">移动到回收站</a-radio-button>
-						<a-radio-button value="delete">直接删除</a-radio-button>
+						<!-- <a-radio-button disabled value="delete">直接删除</a-radio-button> -->
 					</a-radio-group>
 				</div>
 				<div v-else style="flex: 1"></div>
@@ -367,6 +407,12 @@ watch(
 
 		.card {
 			margin-bottom: 15px;
+     
+      .right-tools {
+        .text {
+          font-size: 12px;
+        }
+      }
 		}
 	}
 }

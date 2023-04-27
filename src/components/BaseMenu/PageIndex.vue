@@ -38,7 +38,7 @@ const menus = reactive([
 			menusStore.setMenuCollapsed(!menusStore.getMenuCollapsedStatus)
 		},
 	},
-	...routes,
+  ...routes,
 ])
 
 // lifes
@@ -90,7 +90,7 @@ watch(() => $route.path, setMenuActive)
 	left: 0;
 	top: 0;
 	bottom: 0;
-	z-index: 99;
+	z-index: 200;
 	margin-top: @BaseHeaderHeight;
 	box-shadow: @BoxShadow;
 	width: @width;
