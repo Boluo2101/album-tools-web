@@ -13,12 +13,13 @@ import { ref, reactive, watch, onMounted, computed } from "vue"
 <style lang="less" scoped>
 .userinfo {
   position: fixed; 
-  bottom: 40px;
-  left: 0px;
+  bottom: 60px;
+  left: 50px;
   z-index: 1000;
   box-shadow: @BoxShadow;
-  background-color: #fff;
+  background-color: @DarkBoxBackgroundColor;
   min-width: 200px;
-  min-height: 200px;
+  min-height: 300px;
+  border-radius: @BorderRadius;
 }
 </style>

@@ -10,15 +10,17 @@ import { getUsernameByEmail, registerUser, loginByEmail as loginByEmailAPI } fro
 // Components
 import Tabs from "@/components/Tabs/PageIndex.vue"
 
-// routers
-const $router = useRouter()
-const $route = useRoute()
-
 // Stores
 import { useStore } from "@/store/bus.js"
 import { useStore as useStoreUserinfo } from "@/store/userinfo.js"
+import { useStore as FeedsStore } from "@/store/feeds.js"
 const EventBus = useStore()
 const userinfoStore = useStoreUserinfo()
+const feedsStore = FeedsStore()
+
+// routers
+const $router = useRouter()
+const $route = useRoute()
 
 // Variables
 const tabs = reactive([
@@ -94,7 +96,8 @@ const loginByEmail = async (data) => {
 
   message.success('登录成功')
 	// 登录成功
-	userinfoStore.setUserinfo(res)
+  userinfoStore.setUserinfo(res)
+  getAndSetCategories(res.uuid)
 
 	// 跳转到首页
 	$router.push({ path: "/" })
@@ -140,10 +143,15 @@ const registerByEmail = async (data) => {
 
 	message.success("注册成功")
 	emailIsExist.value = true
-	userinfoStore.setUserInfo(res)
+  userinfoStore.setUserinfo(res)
+  getAndSetCategories(res.uuid)
 
 	// 跳转到首页
 	$router.push({ path: "/" })
+}
+
+const getAndSetCategories = async (uuid) => {
+  feedsStore.fetchCategoriesByUsersUUID(uuid)
 }
 </script>
 

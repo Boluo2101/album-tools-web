@@ -96,8 +96,17 @@ const getIsActive = (item) => {
 
 				<div class="name" :title="item.name">{{ item.name }}</div>
 
-				<div v-if="getHasChildren(item)" class="right-icons">
-					<component :is="item.opened ? UpOutlined : DownOutlined" style="font-size: 8px"></component>
+				<div v-if="getHasChildren(item) || item.right" class="right-icons">
+					<component
+						v-for="(rightItem, rightIndex) of item.right"
+						:key="rightIndex"
+						:is="rightItem.icon"
+						style="font-size: 10px"
+            class="icon"
+						@click="rightItem.onClick(rightItem, item)"
+					></component>
+
+					<component v-if="getHasChildren(item)" :is="item.opened ? UpOutlined : DownOutlined" style="font-size: 8px"></component>
 				</div>
 			</div>
 		</div>
@@ -107,7 +116,7 @@ const getIsActive = (item) => {
 			:item="item.children"
 			:level="props.level + 1"
 			class="children"
-			@updateActiveKey="(ids) => updateActiveKey([...ids, parentItemColorful ? item.id : 0 ].filter(i => i))"
+			@updateActiveKey="(ids) => updateActiveKey([...ids, parentItemColorful ? item.id : 0].filter((i) => i))"
 		></TreeNode>
 	</div>
 </template>

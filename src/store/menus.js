@@ -5,7 +5,8 @@ export const useStore = defineStore("menus", {
 	// 推荐使用 完整类型推断的箭头函数
 	state: () => ({
 		collapsed: true,
-		activeMenuKey: 0,
+    activeMenuKey: 0,
+    createCategoryModalVisible: false,
 	}),
 	getters: {
 		getMenuCollapsedStatus() {
@@ -16,6 +17,9 @@ export const useStore = defineStore("menus", {
     },
     getMenuRouters() {
       return routes.filter(item => item.isMenu)
+    },
+    getCategoryModalVisible() {
+      return this.createCategoryModalVisible
     }
 	},
 	actions: {
@@ -26,6 +30,10 @@ export const useStore = defineStore("menus", {
 		setMenuActiveKey(value) {
 			console.info("setMenuActiveKey", value)
 			this.activeMenuKey = value
-		},
+    },
+    setCreateCategoryModalVisible(value) {
+      console.info("setCreateCategoryModalVisible", value)
+      this.createCategoryModalVisible = value
+    }
 	},
 })
