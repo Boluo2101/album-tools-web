@@ -2,14 +2,18 @@
 import BaseHeader from "./components/BaseHeader/PageIndex.vue"
 import BaseMenu from "./components/BaseMenu/PageIndex.vue"
 import PageContainer from "./components/PageContainer/PageIndex.vue"
+
+// Stores
+import { useStore } from '@/store/userinfo.js'
+const userinfoStore = useStore()
 </script>
 
 <template>
 	<!-- 头部导航栏 -->
-	<BaseHeader></BaseHeader>
+	<BaseHeader v-if="userinfoStore.getIsLogined"></BaseHeader>
 
 	<!-- 菜单 -->
-	<BaseMenu></BaseMenu>
+	<BaseMenu v-if="userinfoStore.getIsLogined"></BaseMenu>
 
 	<!-- 路由视图 -->
 	<PageContainer></PageContainer>

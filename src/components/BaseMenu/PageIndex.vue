@@ -1,15 +1,14 @@
 <script setup>
 // components
-import { FolderOutlined, MenuFoldOutlined, MenuUnfoldOutlined, PictureOutlined } from "@ant-design/icons-vue"
+import { FolderOutlined, MenuFoldOutlined, MenuUnfoldOutlined, PictureOutlined, SettingOutlined, UserOutlined } from "@ant-design/icons-vue"
 import TreeNode from "./TreeNode.vue"
+import UserinfoPanel from "@/components/Userinfo/PageIndex.vue"
 
 import { useRouter, useRoute } from "vue-router"
 import { ref, reactive, watch, onMounted, computed } from "vue"
 import { sortBy, cloneDeep, first } from "lodash"
 import { useStore } from "@/store/menus.js"
 import { useStore as picturesStore } from "@/store/pictures.js"
-// configs
-import { routes } from "@/routes/index.js"
 
 // routers
 const $router = useRouter()
@@ -19,7 +18,8 @@ const $route = useRoute()
 const menusStore = useStore()
 const pictureStore = picturesStore()
 
-// values
+// variables
+const userPanelShow = ref(false)
 
 // computed
 // 获取菜单收拢状态图标
@@ -38,7 +38,7 @@ const menus = reactive([
 			menusStore.setMenuCollapsed(!menusStore.getMenuCollapsedStatus)
 		},
 	},
-	...routes,
+	...menusStore.getMenuRouters,
 ])
 
 // lifes
@@ -67,6 +67,10 @@ const getAndSetPicturesDirectories = async () => {
 	menuItem.children = pictureStore.getDirectories
 }
 
+const handleUserItem = () => {
+	userPanelShow.value = !userPanelShow.value
+}
+
 // watch
 // 识别当前进入的页面自动高亮菜单
 watch(() => $route.path, setMenuActive)
@@ -75,6 +79,31 @@ watch(() => $route.path, setMenuActive)
 <template>
 	<div :class="['base-menu', menusStore.getMenuCollapsedStatus ? 'with-collapsed' : '']">
 		<TreeNode :item="menus" :level="0" @click="handleItemClick"></TreeNode>
+
+		<div style="flex: 1"></div>
+
+		<!-- 用户按钮 -->
+		<div class="tree-node">
+			<div class="tree-node-box" @click="handleUserItem">
+				<div class="icon">
+					<UserOutlined />
+				</div>
+			</div>
+		</div>
+
+		<!-- 设置按钮 -->
+		<div class="tree-node">
+			<div class="tree-node-box" @click="handleItemClick({ path: '/settings' })">
+				<div class="icon">
+					<SettingOutlined />
+				</div>
+			</div>
+		</div>
+
+
+
+    <!-- 用户信息面板 -->
+    <UserinfoPanel v-show="userPanelShow"></UserinfoPanel>
 	</div>
 </template>
 
@@ -100,6 +129,8 @@ watch(() => $route.path, setMenuActive)
 	overflow-y: auto;
 	-webkit-app-region: drag;
 	border-right: 1px solid @DarkBorderSecondColor;
+	display: flex;
+	flex-direction: column;
 
 	&.with-collapsed {
 		@width: 60px;

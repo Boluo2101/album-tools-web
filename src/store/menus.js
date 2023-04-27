@@ -1,4 +1,5 @@
 import { defineStore } from "pinia"
+import { routes } from "@/routes/index.js"
 
 export const useStore = defineStore("menus", {
 	// 推荐使用 完整类型推断的箭头函数
@@ -12,7 +13,10 @@ export const useStore = defineStore("menus", {
 		},
 		getMenuActiveKey() {
 			return this.activeMenuKey
-		},
+    },
+    getMenuRouters() {
+      return routes.filter(item => item.isMenu)
+    }
 	},
 	actions: {
 		setMenuCollapsed(value) {

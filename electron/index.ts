@@ -15,7 +15,8 @@ const createWindow = () => {
 			// 集成网页和 Node.js，也就是在渲染进程中，可以调用 Node.js 方法
 			nodeIntegration: true,
 			contextIsolation: false,
-			//允许html页面上的javascipt代码访问nodejs 环境api代码的能力（与node集成的意思）
+			// 允许html页面上的javascipt代码访问nodejs 环境api代码的能力（与node集成的意思）
+			experimentalFeatures: true,
 		},
 
 		// 隐藏菜单栏
@@ -29,8 +30,8 @@ const createWindow = () => {
 		height: getScreenHeight(0.7),
 
 		// 窗口最小宽高
-		minWidth: 800,
-		minHeight: 495,
+		minWidth: 1000,
+		minHeight: 660,
 
 		// 默认背景色
 		backgroundColor: "#000",
@@ -87,6 +88,11 @@ const createWindow = () => {
 		console.log(url)
 		win.loadURL(url)
 	}
+
+	win.on("unmaximize", () => {
+		// 重置窗口到最小宽高
+		win.setSize(1000, 660)
+	})
 }
 
 // 初始化app（在 Electron 完成初始化时触发）
@@ -137,11 +143,15 @@ const getScreenHeight = (num = 1) => {
 }
 
 ipcMain.on("hideWindow", () => {
-  win.minimize()
+	win.minimize()
 })
 
 ipcMain.on("fullScreenToggle", () => {
 	win.isMaximized() ? win.unmaximize() : win.maximize()
+})
+
+ipcMain.on("fullScreen", () => {
+	win.maximize()
 })
 
 ipcMain.on("closeWindow", () => {
